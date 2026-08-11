@@ -4,7 +4,7 @@ A compact Sales and Stock ERP assessment project built with CodeIgniter 3. The a
 
 ## Current Status
 
-Phase 1 is complete: the CodeIgniter foundation, database schema and seed data, security defaults, shared layout, and local setup documentation are available. Product, inventory, sales, authentication, and reporting screens are implemented in later phases.
+Phase 1 is complete: the CodeIgniter foundation, database schema and seed data, security defaults, shared layout, and local setup documentation are available. The current foundation screen is temporary; Phase 2 will introduce the Tailwind CSS ERP application shell before product screens are built. Product, inventory, sales, authentication, and reporting screens are implemented in later phases.
 
 ## Requirements
 
@@ -13,6 +13,8 @@ Phase 1 is complete: the CodeIgniter foundation, database schema and seed data, 
 - Apache with `mod_rewrite` enabled, or another web server configured to route requests through `index.php`
 - A writable `application/cache/sessions` directory
 - CodeIgniter 3.1.13 (included in this repository)
+
+Node.js/npm will be required only when rebuilding Tailwind CSS after the front-end build pipeline is introduced. The compiled stylesheet will remain checked in, so normal application installation will continue to require only PHP, MySQL/MariaDB, and the web server.
 
 ## Local Installation
 
@@ -81,6 +83,19 @@ The repeat-safe seed includes:
 
 Additional product, stock, sales, authentication, and report routes will be added with their modules.
 
+## Interface Design Direction
+
+The application will use Tailwind CSS and a structured ERP interface rather than independent page layouts. The shared shell will include:
+
+- A desktop sidebar and responsive mobile navigation
+- A top bar with user and warehouse context
+- Navigation groups for Dashboard, Catalog, Inventory, Sales, Reports, and Account
+- Consistent page headers, breadcrumbs, action areas, filter toolbars, tables, forms, badges, alerts, and empty states
+- Compact, readable information density suitable for routine business operations
+- Accessible focus states, form labels, semantic markup, and responsive behavior
+
+Tailwind will be compiled locally into the checked-in application stylesheet. The runtime will not depend on the Tailwind Play CDN. Exact build and watch commands will be added when the Tailwind pipeline is implemented in Phase 2.
+
 ## Important Assumptions
 
 - Money is stored in `DECIMAL` columns and will be rounded to two decimal places server-side.
@@ -88,3 +103,4 @@ Additional product, stock, sales, authentication, and report routes will be adde
 - Inventory is represented by one unique `warehouse_products` row per warehouse and product.
 - Successful inventory quantities cannot be negative; the database includes supporting check constraints, while invoice business rules will enforce this inside transactions.
 - The initial SQL uses `CREATE TABLE IF NOT EXISTS` and `INSERT IGNORE`, so re-importing does not delete existing data.
+- UI components should remain reusable CI3 view partials and use Tailwind utilities consistently instead of accumulating page-specific CSS.
