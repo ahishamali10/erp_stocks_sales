@@ -4,7 +4,7 @@ A compact Sales and Stock ERP assessment project built with CodeIgniter 3. The a
 
 ## Current Status
 
-Phases 1 through 7 and administrator user management are complete. The project includes the secure CodeIgniter foundation, database schema and seed data, a compiled Tailwind CSS ERP shell, catalog and warehouse inventory management, customer management, transactional sales invoicing, invoice history, session authentication, warehouse authorization, user administration, and low-stock reporting with CSV export.
+Phases 1 through 8 are complete. The project includes the secure CodeIgniter foundation, database schema and seed data, a compiled Tailwind CSS ERP shell, catalog and warehouse inventory management, customer management, transactional sales invoicing, invoice history, session authentication, warehouse authorization, user administration, low-stock reporting with CSV export, and final clean-install/security verification.
 
 ## Features
 
@@ -74,7 +74,9 @@ The default base URL is configured in `application/config/config.php` as `http:/
 
 CSRF protection is enabled. Token regeneration is deliberately disabled so normal forms and later concurrent AJAX calls can share the session token safely. The token still expires with its cookie/session lifecycle.
 
-For HTTPS deployments, enable secure cookies and set the application environment to `production`. Do not expose database errors or commit production credentials.
+For production, set `CI_ENV=production`. The front controller accepts this through either the web-server variable or process environment. For HTTPS, set `ERP_BASE_URL` to the HTTPS URL and `ERP_COOKIE_SECURE=1`. Do not expose database errors or commit production credentials.
+
+Apache uses the checked-in `.htaccess` to deny direct HTTP access to application/framework code, repository metadata, dependencies, tests, local instruction files, and `database/database.sql`. On Nginx, Caddy, IIS, Herd, or another server that does not honor `.htaccess`, configure equivalent deny rules or use a document root that exposes only the front controller and public assets.
 
 ## Demo Credentials
 
@@ -159,6 +161,19 @@ The application uses Tailwind CSS and a structured ERP interface rather than ind
 - Accessible focus states, form labels, semantic markup, and responsive behavior
 
 Tailwind is compiled locally into the checked-in application stylesheet. The runtime does not depend on the Tailwind Play CDN.
+
+## Final Verification
+
+Phase 8 was verified on August 12, 2026 using PHP 7.4.33 and an isolated database created from the checked-in SQL and removed after testing.
+
+- Imported `database/database.sql` twice successfully to confirm clean installation and repeat safety
+- Confirmed 8 tables, 3 categories, 3 warehouses, 6 products, 18 unique inventory positions, 3 customers, and 2 hashed demo users
+- Signed in with both demonstration roles against the clean database
+- Created an invoice while submitting tampered browser price/total values; the server saved trusted totals and deducted only the selected warehouse stock
+- Confirmed insufficient stock rolls back the complete invoice
+- Confirmed GET requests cannot perform mutations and POST requests without a CSRF token are rejected
+- Confirmed warehouse users cannot access another warehouse through page, AJAX, invoice, or CSV parameters
+- Ran PHP syntax checks, JavaScript syntax checks, the production Tailwind build, Git consistency checks, and live HTTP smoke tests
 
 ## Important Assumptions
 

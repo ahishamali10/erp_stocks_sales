@@ -1,5 +1,12 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
+
+    # Keep repository metadata, local instructions, dependencies, tests, and setup data out of HTTP responses.
+    RewriteRule (^|/)\.(?!well-known(?:/|$)) - [F]
+    RewriteRule ^(?:application|system|database|tests|vendor|node_modules|user_guide_src)(?:/|$) - [F,NC]
+    RewriteRule ^(?:AGENTS|IMPLEMENTATION)\.md$ - [F,NC]
+    RewriteRule ^(?:composer\.(?:json|lock)|package(?:-lock)?\.json|tailwind\.config\.js)$ - [F,NC]
+
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ index.php/$1 [L]
