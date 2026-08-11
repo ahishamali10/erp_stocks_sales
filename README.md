@@ -4,7 +4,7 @@ A compact Sales and Stock ERP assessment project built with CodeIgniter 3. The a
 
 ## Current Status
 
-Phases 1 through 6 are complete. The project includes the secure CodeIgniter foundation, database schema and seed data, a compiled Tailwind CSS ERP shell, catalog and warehouse inventory management, customer management, transactional sales invoicing, session authentication, warehouse authorization, and low-stock reporting.
+Phases 1 through 6 and administrator user management are complete. The project includes the secure CodeIgniter foundation, database schema and seed data, a compiled Tailwind CSS ERP shell, catalog and warehouse inventory management, customer management, transactional sales invoicing, session authentication, warehouse authorization, user administration, and low-stock reporting.
 
 ## Features
 
@@ -21,6 +21,7 @@ Phases 1 through 6 are complete. The project includes the secure CodeIgniter fou
 - Trusted server-side prices and calculations, deterministic inventory row locking, insufficient-stock rejection, and atomic stock deduction
 - Session login/logout using bcrypt password verification and session-ID regeneration
 - `admin` organization-wide access and server-enforced `user_warehouse` access to the assigned warehouse only
+- Administrator-only user management with search, role filters, create/edit, secure password replacement, warehouse assignment, and protected deletion
 - Warehouse-scoped low-stock report with product search, warehouse filter, shortage calculation, summaries, and pagination
 - Output escaping for database and submitted values
 - Repeat-safe database schema and demonstration data
@@ -101,6 +102,9 @@ The repeat-safe seed includes:
 - `/home` — ERP dashboard
 - `/login` — public sign-in page
 - `/logout` — POST-only session logout
+- `/users` — administrator-only user directory, search, and role filter
+- `/users/create` — create an administrator or warehouse user
+- `/users/edit/{id}` — edit account access or replace its password
 - `/products` — product list, search, category filter, and pagination
 - `/products/create` — add product
 - `/products/edit/{id}` — edit product
@@ -119,7 +123,7 @@ The repeat-safe seed includes:
 - `/sales/search-products` — warehouse-scoped product search JSON endpoint
 - `/reports/low-stock` — authorized low-stock report, warehouse filter, product search, and shortage summary
 
-Product, category, inventory, warehouse, customer, sales, and logout writes use explicit POST routes. Categories assigned to products and customers assigned to invoices cannot be deleted. Warehouse management is administrator-only; warehouse users are restricted server-side on inventory, sales, dashboard summaries, and reports.
+Product, category, inventory, warehouse, customer, user, sales, and logout writes use explicit POST routes. Categories assigned to products, customers assigned to invoices, and users with attributed invoices cannot be deleted. Warehouse and user management are administrator-only; warehouse users are restricted server-side on inventory, sales, dashboard summaries, and reports.
 
 ## Tailwind CSS Development
 
@@ -164,6 +168,7 @@ Tailwind is compiled locally into the checked-in application stylesheet. The run
 - Inventory rows are locked in ascending product ID order with `SELECT ... FOR UPDATE`; any unavailable line rolls back the complete invoice.
 - Invoice numbers are finalized from the inserted sale ID, backed by the database unique constraint.
 - Saved invoices record the signed-in user ID. Warehouse users may search, adjust stock, report on, and sell only from their assigned warehouse; administrators may access all warehouses.
+- User passwords are accepted only when 8–72 characters and are stored with `password_hash()`. The final administrator cannot be demoted or deleted, and users cannot delete their own signed-in account.
 - A low-stock position is defined as `quantity <= alert_quantity`; shortage is `max(alert_quantity - quantity, 0)`.
 - Successful inventory quantities cannot be negative; the database includes supporting check constraints, while invoice business rules will enforce this inside transactions.
 - The initial SQL uses `CREATE TABLE IF NOT EXISTS` and `INSERT IGNORE`, so re-importing does not delete existing data.

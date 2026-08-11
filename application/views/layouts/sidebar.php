@@ -84,6 +84,16 @@ $is_admin = isset($this->current_user['role']) && $this->current_user['role'] ==
                 Low stock
             </a>
         </div>
+
+        <?php if ($is_admin): ?>
+            <div class="mt-7 space-y-1">
+                <p class="px-3 pb-2 text-[11px] font-bold uppercase tracking-widest text-slate-500">Administration</p>
+                <a href="<?php echo site_url('users'); ?>" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition <?php echo $active_nav === 'users' ? $active_classes : $inactive_classes; ?>" <?php echo $active_nav === 'users' ? 'aria-current="page"' : ''; ?>>
+                    <svg aria-hidden="true" class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7-4h6m-3-3v6" /></svg>
+                    Users
+                </a>
+            </div>
+        <?php endif; ?>
     </nav>
 
     <div class="border-t border-white/10 p-4">
