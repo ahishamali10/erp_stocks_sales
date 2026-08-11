@@ -4,7 +4,16 @@ A compact Sales and Stock ERP assessment project built with CodeIgniter 3. The a
 
 ## Current Status
 
-Phase 1 is complete: the CodeIgniter foundation, database schema and seed data, security defaults, shared layout, and local setup documentation are available. The current foundation screen is temporary; Phase 2 will introduce the Tailwind CSS ERP application shell before product screens are built. Product, inventory, sales, authentication, and reporting screens are implemented in later phases.
+Phases 1 and 2 are complete. The project includes the secure CodeIgniter foundation, database schema and seed data, a compiled Tailwind CSS ERP shell, and full product management. Inventory, sales, authentication, and reporting are implemented in later phases.
+
+## Features
+
+- Structured ERP shell with desktop sidebar, responsive mobile navigation, top bar, breadcrumbs, feedback messages, and reusable page patterns
+- Product listing with name/code search, category filtering, preserved-filter pagination, and empty states
+- Product create/edit forms with server-side validation and duplicate-code protection
+- POST-only product enable/disable actions with CSRF protection and confirmation prompts
+- Output escaping for database and submitted values
+- Repeat-safe database schema and demonstration data
 
 ## Requirements
 
@@ -14,7 +23,7 @@ Phase 1 is complete: the CodeIgniter foundation, database schema and seed data, 
 - A writable `application/cache/sessions` directory
 - CodeIgniter 3.1.13 (included in this repository)
 
-Node.js/npm will be required only when rebuilding Tailwind CSS after the front-end build pipeline is introduced. The compiled stylesheet will remain checked in, so normal application installation will continue to require only PHP, MySQL/MariaDB, and the web server.
+Node.js/npm is required only when rebuilding Tailwind CSS. The compiled stylesheet is checked in, so normal application installation requires only PHP, MySQL/MariaDB, and the web server.
 
 ## Local Installation
 
@@ -78,14 +87,34 @@ The repeat-safe seed includes:
 
 ## Current Routes
 
-- `/` — foundation dashboard
-- `/home` — foundation dashboard
+- `/` — ERP dashboard
+- `/home` — ERP dashboard
+- `/products` — product list, search, category filter, and pagination
+- `/products/create` — add product
+- `/products/edit/{id}` — edit product
 
-Additional product, stock, sales, authentication, and report routes will be added with their modules.
+Product writes use explicit POST routes. Stock, sales, authentication, and report routes will be added with their modules.
+
+## Tailwind CSS Development
+
+Tailwind CSS and its CLI are pinned at `4.3.3` as development dependencies. Install the build tooling and compile the checked-in stylesheet with:
+
+```powershell
+npm install
+npm run css:build
+```
+
+For active UI development:
+
+```powershell
+npm run css:watch
+```
+
+The source file is `assets/css/input.css`; the generated runtime asset is `assets/css/app.css`. PHP views and application JavaScript are explicitly registered as Tailwind sources. Do not edit the generated stylesheet by hand.
 
 ## Interface Design Direction
 
-The application will use Tailwind CSS and a structured ERP interface rather than independent page layouts. The shared shell will include:
+The application uses Tailwind CSS and a structured ERP interface rather than independent page layouts. The shared shell includes:
 
 - A desktop sidebar and responsive mobile navigation
 - A top bar with user and warehouse context
@@ -94,7 +123,7 @@ The application will use Tailwind CSS and a structured ERP interface rather than
 - Compact, readable information density suitable for routine business operations
 - Accessible focus states, form labels, semantic markup, and responsive behavior
 
-Tailwind will be compiled locally into the checked-in application stylesheet. The runtime will not depend on the Tailwind Play CDN. Exact build and watch commands will be added when the Tailwind pipeline is implemented in Phase 2.
+Tailwind is compiled locally into the checked-in application stylesheet. The runtime does not depend on the Tailwind Play CDN.
 
 ## Important Assumptions
 
