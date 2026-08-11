@@ -66,7 +66,7 @@ class User_model extends CI_Model
     public function find($id)
     {
         return $this->db
-            ->select('u.id, u.warehouse_id, u.name, u.email, u.role')
+            ->select('u.id, u.warehouse_id, u.name, u.email, u.role, u.created_at')
             ->select('w.name AS warehouse_name, w.code AS warehouse_code, w.is_active AS warehouse_is_active')
             ->from($this->table.' u')
             ->join('warehouses w', 'w.id = u.warehouse_id', 'left')
