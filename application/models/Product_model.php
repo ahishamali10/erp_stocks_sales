@@ -55,7 +55,28 @@ class Product_model extends CI_Model
 
     public function create($data)
     {
-        return $this->db->insert($this->table, $data);
+        $this->db->trans_begin();
+
+        if (!$this->db->insert($this->table, $data)) {
+            $this->db->trans_rollback();
+            return FALSE;
+        }
+
+        $product_id = (int) $this->db->insert_id();
+        $sql = 'INSERT INTO warehouse_products (warehouse_id, product_id, quantity) '
+            .'SELECT id, ?, 0 FROM warehouses';
+
+        if (!$this->db->query($sql, array($product_id))) {
+            $this->db->trans_rollback();
+            return FALSE;
+        }
+
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return FALSE;
+        }
+
+        return $this->db->trans_commit();
     }
 
     public function update($id, $data)

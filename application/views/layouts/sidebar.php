@@ -54,13 +54,12 @@ $inactive_classes = 'text-slate-300 hover:bg-white/10 hover:text-white';
 
         <div class="mt-7 space-y-1">
             <p class="px-3 pb-2 text-[11px] font-bold uppercase tracking-widest text-slate-500">Operations</p>
-            <span class="flex cursor-not-allowed items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-500" aria-disabled="true">
+            <a href="<?php echo site_url('stock'); ?>" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition <?php echo $active_nav === 'stock' ? $active_classes : $inactive_classes; ?>" <?php echo $active_nav === 'stock' ? 'aria-current="page"' : ''; ?>>
                 <svg aria-hidden="true" class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6M8 10h.01M12 10h.01M16 10h.01" />
                 </svg>
                 Inventory
-                <span class="ml-auto rounded-full bg-white/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide">Soon</span>
-            </span>
+            </a>
             <span class="flex cursor-not-allowed items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-500" aria-disabled="true">
                 <svg aria-hidden="true" class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M7 3h10v4H7V3ZM5 7h14v14H5V7Zm4 4h6m-6 4h6" />

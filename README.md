@@ -4,7 +4,7 @@ A compact Sales and Stock ERP assessment project built with CodeIgniter 3. The a
 
 ## Current Status
 
-Phases 1 and 2 are complete. The project includes the secure CodeIgniter foundation, database schema and seed data, a compiled Tailwind CSS ERP shell, product management, and category management. Inventory, sales, authentication, and reporting are implemented in later phases.
+Phases 1 through 3 are complete. The project includes the secure CodeIgniter foundation, database schema and seed data, a compiled Tailwind CSS ERP shell, catalog management, and warehouse-specific inventory management. Sales, authentication, and reporting are implemented in later phases.
 
 ## Features
 
@@ -13,6 +13,8 @@ Phases 1 and 2 are complete. The project includes the secure CodeIgniter foundat
 - Product create/edit forms with server-side validation and duplicate-code protection
 - POST-only product enable/disable actions with CSRF protection and confirmation prompts
 - Category listing, create/edit forms, unique-name validation, product counts, and protected deletion
+- Warehouse inventory listing with product search, warehouse filtering, pagination, health indicators, and quantity adjustment
+- Automatic zero-quantity inventory initialization for every warehouse when a product is created
 - Output escaping for database and submitted values
 - Repeat-safe database schema and demonstration data
 
@@ -96,8 +98,10 @@ The repeat-safe seed includes:
 - `/categories` — category list and product counts
 - `/categories/create` — add category
 - `/categories/edit/{id}` — edit category
+- `/stock` — warehouse inventory, search, filter, and pagination
+- `/stock/edit/{warehouse_id}/{product_id}` — adjust one warehouse/product quantity
 
-Product and category writes use explicit POST routes. Categories assigned to products cannot be deleted. Stock, sales, authentication, and report routes will be added with their modules.
+Product, category, and inventory writes use explicit POST routes. Categories assigned to products cannot be deleted. Sales, authentication, and report routes will be added with their modules.
 
 ## Tailwind CSS Development
 
@@ -134,6 +138,7 @@ Tailwind is compiled locally into the checked-in application stylesheet. The run
 - Money is stored in `DECIMAL` columns and will be rounded to two decimal places server-side.
 - Product disabling is soft through `products.is_active`.
 - Inventory is represented by one unique `warehouse_products` row per warehouse and product.
+- Newly created products receive a zero-quantity inventory row for every current warehouse within the product creation transaction.
 - Successful inventory quantities cannot be negative; the database includes supporting check constraints, while invoice business rules will enforce this inside transactions.
 - The initial SQL uses `CREATE TABLE IF NOT EXISTS` and `INSERT IGNORE`, so re-importing does not delete existing data.
 - UI components should remain reusable CI3 view partials and use Tailwind utilities consistently instead of accumulating page-specific CSS.

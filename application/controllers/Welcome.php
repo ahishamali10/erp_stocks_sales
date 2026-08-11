@@ -7,6 +7,7 @@ class Welcome extends CI_Controller {
 	{
 		$this->load->model('Product_model', 'products');
 		$this->load->model('Category_model', 'categories');
+		$this->load->model('Stock_model', 'stock');
 
 		$data = array(
 			'page_title' => 'Dashboard',
@@ -14,6 +15,7 @@ class Welcome extends CI_Controller {
 			'active_nav' => 'dashboard',
 			'product_summary' => $this->products->get_dashboard_summary(),
 			'category_count' => $this->categories->count_all(),
+			'inventory_summary' => $this->stock->get_summary(),
 			'recent_products' => $this->products->get_recent(5),
 		);
 

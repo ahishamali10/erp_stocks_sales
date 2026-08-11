@@ -172,6 +172,11 @@ INSERT IGNORE INTO warehouse_products (warehouse_id, product_id, quantity) VALUE
     (2, 1, 4),  (2, 2, 8),  (2, 3, 9),  (2, 4, 14), (2, 5, 3), (2, 6, 0),
     (3, 1, 7),  (3, 2, 3),  (3, 3, 16), (3, 4, 6),  (3, 5, 9), (3, 6, 1);
 
+INSERT IGNORE INTO warehouse_products (warehouse_id, product_id, quantity)
+SELECT w.id, p.id, 0
+FROM warehouses w
+CROSS JOIN products p;
+
 INSERT IGNORE INTO customers (id, name, phone, email) VALUES
     (1, 'Acme Trading', '+1 555 0101', 'purchasing@acme.example'),
     (2, 'Northwind Office', '+1 555 0102', 'orders@northwind.example'),

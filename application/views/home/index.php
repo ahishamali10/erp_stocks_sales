@@ -56,14 +56,14 @@
     <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div class="flex items-start justify-between gap-4">
             <div>
-                <p class="text-sm font-medium text-slate-500">Disabled products</p>
-                <p class="mt-2 text-3xl font-bold tracking-tight text-slate-950"><?php echo html_escape($product_summary['inactive_products']); ?></p>
+                <p class="text-sm font-medium text-slate-500">Warehouses</p>
+                <p class="mt-2 text-3xl font-bold tracking-tight text-slate-950"><?php echo html_escape($inventory_summary['warehouse_count']); ?></p>
             </div>
             <span class="flex size-10 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
-                <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M6 6l12 12M18 6 6 18" /></svg>
+                <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6" /></svg>
             </span>
         </div>
-        <p class="mt-4 text-xs text-slate-500">Retained for historical integrity</p>
+        <a href="<?php echo site_url('stock'); ?>" class="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-brand-700 hover:text-brand-900"><?php echo html_escape(number_format($inventory_summary['total_units'])); ?> units on hand <span aria-hidden="true">→</span></a>
     </article>
 </section>
 
@@ -116,15 +116,16 @@
                 <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18m9-9H3" /></svg>
             </span>
             <div>
-                <h2 class="font-bold text-slate-900">Phase 2</h2>
-                <p class="text-xs text-slate-500">Catalog operations</p>
+                <h2 class="font-bold text-slate-900">Phase 3</h2>
+                <p class="text-xs text-slate-500">Warehouse inventory</p>
             </div>
         </div>
         <div class="mt-5 space-y-3 text-sm">
             <div class="flex items-center gap-3 text-emerald-700"><span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span><span>ERP application shell</span></div>
             <div class="flex items-center gap-3 text-emerald-700"><span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span><span>Tailwind CSS pipeline</span></div>
             <div class="flex items-center gap-3 text-emerald-700"><span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span><span>Product catalog tools</span></div>
-            <div class="flex items-center gap-3 text-slate-400"><span class="flex size-5 items-center justify-center rounded-full bg-slate-100 text-xs">3</span><span>Warehouse inventory next</span></div>
+            <div class="flex items-center gap-3 text-emerald-700"><span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span><span>Warehouse inventory</span></div>
+            <div class="flex items-center gap-3 text-slate-400"><span class="flex size-5 items-center justify-center rounded-full bg-slate-100 text-xs">4</span><span>Customer foundation next</span></div>
         </div>
     </aside>
 </div>
