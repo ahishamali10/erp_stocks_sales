@@ -50,7 +50,7 @@
                 <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h10M4 18h7" /></svg>
             </span>
         </div>
-        <p class="mt-4 text-xs text-slate-500">Used to organize product filters</p>
+        <a href="<?php echo site_url('categories'); ?>" class="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-brand-700 hover:text-brand-900">Manage categories <span aria-hidden="true">→</span></a>
     </article>
 
     <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">

@@ -4,7 +4,7 @@ A compact Sales and Stock ERP assessment project built with CodeIgniter 3. The a
 
 ## Current Status
 
-Phases 1 and 2 are complete. The project includes the secure CodeIgniter foundation, database schema and seed data, a compiled Tailwind CSS ERP shell, and full product management. Inventory, sales, authentication, and reporting are implemented in later phases.
+Phases 1 and 2 are complete. The project includes the secure CodeIgniter foundation, database schema and seed data, a compiled Tailwind CSS ERP shell, product management, and category management. Inventory, sales, authentication, and reporting are implemented in later phases.
 
 ## Features
 
@@ -12,6 +12,7 @@ Phases 1 and 2 are complete. The project includes the secure CodeIgniter foundat
 - Product listing with name/code search, category filtering, preserved-filter pagination, and empty states
 - Product create/edit forms with server-side validation and duplicate-code protection
 - POST-only product enable/disable actions with CSRF protection and confirmation prompts
+- Category listing, create/edit forms, unique-name validation, product counts, and protected deletion
 - Output escaping for database and submitted values
 - Repeat-safe database schema and demonstration data
 
@@ -92,8 +93,11 @@ The repeat-safe seed includes:
 - `/products` — product list, search, category filter, and pagination
 - `/products/create` — add product
 - `/products/edit/{id}` — edit product
+- `/categories` — category list and product counts
+- `/categories/create` — add category
+- `/categories/edit/{id}` — edit category
 
-Product writes use explicit POST routes. Stock, sales, authentication, and report routes will be added with their modules.
+Product and category writes use explicit POST routes. Categories assigned to products cannot be deleted. Stock, sales, authentication, and report routes will be added with their modules.
 
 ## Tailwind CSS Development
 

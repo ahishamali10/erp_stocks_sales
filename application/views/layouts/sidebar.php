@@ -44,6 +44,12 @@ $inactive_classes = 'text-slate-300 hover:bg-white/10 hover:text-white';
                 </svg>
                 Products
             </a>
+            <a href="<?php echo site_url('categories'); ?>" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition <?php echo $active_nav === 'categories' ? $active_classes : $inactive_classes; ?>" <?php echo $active_nav === 'categories' ? 'aria-current="page"' : ''; ?>>
+                <svg aria-hidden="true" class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h10M4 18h7" />
+                </svg>
+                Categories
+            </a>
         </div>
 
         <div class="mt-7 space-y-1">
