@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $active_nav = isset($active_nav) ? $active_nav : '';
 $active_classes = 'bg-brand-600 text-white shadow-sm shadow-brand-900/20';
 $inactive_classes = 'text-slate-300 hover:bg-white/10 hover:text-white';
+$is_admin = isset($this->current_user['role']) && $this->current_user['role'] === 'admin';
 ?>
 <aside data-sidebar class="fixed inset-y-0 left-0 z-50 flex w-72 -translate-x-full flex-col bg-slate-950 text-white shadow-2xl transition-transform duration-200 ease-out lg:translate-x-0" aria-label="ERP navigation">
     <div class="flex h-16 shrink-0 items-center justify-between border-b border-white/10 px-5">
@@ -60,10 +61,12 @@ $inactive_classes = 'text-slate-300 hover:bg-white/10 hover:text-white';
                 </svg>
                 Inventory
             </a>
-            <a href="<?php echo site_url('warehouses'); ?>" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition <?php echo $active_nav === 'warehouses' ? $active_classes : $inactive_classes; ?>" <?php echo $active_nav === 'warehouses' ? 'aria-current="page"' : ''; ?>>
-                <svg aria-hidden="true" class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 20V9l8-5 8 5v11M8 20v-6h8v6" /></svg>
-                Warehouses
-            </a>
+            <?php if ($is_admin): ?>
+                <a href="<?php echo site_url('warehouses'); ?>" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition <?php echo $active_nav === 'warehouses' ? $active_classes : $inactive_classes; ?>" <?php echo $active_nav === 'warehouses' ? 'aria-current="page"' : ''; ?>>
+                    <svg aria-hidden="true" class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 20V9l8-5 8 5v11M8 20v-6h8v6" /></svg>
+                    Warehouses
+                </a>
+            <?php endif; ?>
             <a href="<?php echo site_url('customers'); ?>" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition <?php echo $active_nav === 'customers' ? $active_classes : $inactive_classes; ?>" <?php echo $active_nav === 'customers' ? 'aria-current="page"' : ''; ?>>
                 <svg aria-hidden="true" class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm13 10v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg>
                 Customers
@@ -74,20 +77,19 @@ $inactive_classes = 'text-slate-300 hover:bg-white/10 hover:text-white';
                 </svg>
                 Sales
             </a>
-            <span class="flex cursor-not-allowed items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-500" aria-disabled="true">
+            <a href="<?php echo site_url('reports/low-stock'); ?>" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition <?php echo $active_nav === 'reports' ? $active_classes : $inactive_classes; ?>" <?php echo $active_nav === 'reports' ? 'aria-current="page"' : ''; ?>>
                 <svg aria-hidden="true" class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 19V9m5 10V5m5 14v-7m5 7V3" />
                 </svg>
-                Reports
-                <span class="ml-auto rounded-full bg-white/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide">Soon</span>
-            </span>
+                Low stock
+            </a>
         </div>
     </nav>
 
     <div class="border-t border-white/10 p-4">
         <div class="rounded-xl bg-white/5 p-3">
-            <p class="text-xs font-semibold text-slate-200">Assessment workspace</p>
-            <p class="mt-1 text-[11px] leading-5 text-slate-500">PHP 7.4 · CI 3.1.13 · MySQL</p>
+            <p class="text-xs font-semibold text-slate-200"><?php echo html_escape($is_admin ? 'Administrator' : 'Warehouse user'); ?></p>
+            <p class="mt-1 text-[11px] leading-5 text-slate-500"><?php echo html_escape($is_admin ? 'Organization-wide access' : $this->current_user['warehouse_name'].' access'); ?></p>
         </div>
     </div>
 </aside>

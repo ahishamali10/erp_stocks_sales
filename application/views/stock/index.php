@@ -48,7 +48,7 @@
             <div>
                 <label for="warehouse-filter" class="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-500">Warehouse</label>
                 <select id="warehouse-filter" name="warehouse_id" class="min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100">
-                    <option value="">All warehouses</option>
+                    <?php if ($this->current_user['role'] === 'admin'): ?><option value="">All warehouses</option><?php endif; ?>
                     <?php foreach ($warehouses as $warehouse): ?>
                         <option value="<?php echo html_escape($warehouse->id); ?>" <?php echo (int) $warehouse_id === (int) $warehouse->id ? 'selected' : ''; ?>><?php echo html_escape($warehouse->name.' ('.$warehouse->code.')'.($warehouse->is_active ? '' : ' — Disabled')); ?></option>
                     <?php endforeach; ?>

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Categories extends CI_Controller
+class Categories extends MY_Controller
 {
     private $current_category_id = NULL;
 

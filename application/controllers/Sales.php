@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Sales extends CI_Controller
+class Sales extends MY_Controller
 {
     public function __construct()
     {
@@ -25,7 +25,7 @@ class Sales extends CI_Controller
             'page_description' => 'Build an invoice from trusted product prices and live warehouse stock.',
             'active_nav' => 'sales',
             'customers' => $this->customers->get_all(),
-            'warehouses' => $this->warehouses->get_active(),
+            'warehouses' => $this->authorized_warehouses(TRUE),
         ));
     }
 
@@ -36,6 +36,11 @@ class Sales extends CI_Controller
         }
 
         $warehouse_id = $this->positive_integer($this->input->get('warehouse_id'));
+
+        if ($warehouse_id > 0 && !$this->can_access_warehouse($warehouse_id)) {
+            return $this->json_response(FALSE, 'You are not authorized to access that warehouse.', array(), 403);
+        }
+
         $warehouse = $warehouse_id > 0 ? $this->warehouses->find($warehouse_id) : NULL;
 
         if (!$warehouse || !$warehouse->is_active) {
@@ -72,13 +77,13 @@ class Sales extends CI_Controller
         $validation = $this->validate_invoice_request();
 
         if (!$validation['success']) {
-            return $this->invoice_error($validation['message'], 422);
+            return $this->invoice_error($validation['message'], $validation['status']);
         }
 
         $result = $this->sales->create_invoice(
             $validation['customer_id'],
             $validation['warehouse_id'],
-            NULL,
+            $this->current_user['id'],
             $validation['discount_percentage'],
             $validation['discount_basis'],
             $validation['lines']
@@ -114,6 +119,11 @@ class Sales extends CI_Controller
         }
 
         $warehouse_id = $this->positive_integer($this->input->post('warehouse_id'));
+
+        if ($warehouse_id > 0 && !$this->can_access_warehouse($warehouse_id)) {
+            return $this->validation_failure('You are not authorized to sell from that warehouse.', 403);
+        }
+
         $warehouse = $warehouse_id > 0 ? $this->warehouses->find($warehouse_id) : NULL;
 
         if (!$warehouse || !$warehouse->is_active) {
@@ -211,6 +221,10 @@ class Sales extends CI_Controller
             return $this->json_response(FALSE, $message, array(), $status);
         }
 
+        if ((int) $status === 403) {
+            show_error($message, 403, 'Forbidden');
+        }
+
         $this->session->set_flashdata('error', $message);
         redirect('sales/create');
     }
@@ -232,9 +246,9 @@ class Sales extends CI_Controller
             ->set_output(json_encode($payload));
     }
 
-    private function validation_failure($message)
+    private function validation_failure($message, $status = 422)
     {
-        return array('success' => FALSE, 'message' => $message);
+        return array('success' => FALSE, 'message' => $message, 'status' => (int) $status);
     }
 
     private function positive_integer($value)

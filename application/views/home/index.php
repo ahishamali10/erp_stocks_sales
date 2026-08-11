@@ -63,7 +63,7 @@
                 <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6" /></svg>
             </span>
         </div>
-        <a href="<?php echo site_url('warehouses'); ?>" class="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-brand-700 hover:text-brand-900"><?php echo html_escape($warehouse_summary['active_count']); ?> active · <?php echo html_escape(number_format($inventory_summary['total_units'])); ?> units <span aria-hidden="true">→</span></a>
+        <a href="<?php echo $this->current_user['role'] === 'admin' ? site_url('warehouses') : site_url('stock'); ?>" class="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-brand-700 hover:text-brand-900"><?php echo html_escape($warehouse_summary['active_count']); ?> active · <?php echo html_escape(number_format($inventory_summary['total_units'])); ?> units <span aria-hidden="true">→</span></a>
     </article>
 
     <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -129,8 +129,8 @@
                 <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18m9-9H3" /></svg>
             </span>
             <div>
-                <h2 class="font-bold text-slate-900">Phase 5</h2>
-                <p class="text-xs text-slate-500">Sales invoicing</p>
+                <h2 class="font-bold text-slate-900">Phase 6</h2>
+                <p class="text-xs text-slate-500">Permissions and reports</p>
             </div>
         </div>
         <div class="mt-5 space-y-3 text-sm">
@@ -140,7 +140,8 @@
             <div class="flex items-center gap-3 text-emerald-700"><span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span><span>Warehouse inventory</span></div>
             <div class="flex items-center gap-3 text-emerald-700"><span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span><span>Customer management</span></div>
             <div class="flex items-center gap-3 text-emerald-700"><span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span><span>Transactional sales invoices</span></div>
-            <div class="flex items-center gap-3 text-slate-400"><span class="flex size-5 items-center justify-center rounded-full bg-slate-100 text-xs">6</span><span>Permissions and reports next</span></div>
+            <div class="flex items-center gap-3 text-emerald-700"><span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span><span>Session authentication and roles</span></div>
+            <div class="flex items-center gap-3 text-emerald-700"><span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span><span>Scoped low-stock reporting</span></div>
         </div>
     </aside>
 </div>

@@ -40,18 +40,31 @@ class Warehouse_model extends CI_Model
             ->result();
     }
 
-    public function get_summary()
+    public function get_summary($warehouse_id = 0)
     {
-        $row = $this->db
+        $warehouse_query = $this->db
             ->select('COUNT(*) AS total_count', FALSE)
             ->select('COALESCE(SUM(CASE WHEN is_active = 1 THEN 1 ELSE 0 END), 0) AS active_count', FALSE)
             ->select('COALESCE(SUM(CASE WHEN is_active = 0 THEN 1 ELSE 0 END), 0) AS inactive_count', FALSE)
-            ->from($this->table)
+            ->from($this->table);
+
+        if ((int) $warehouse_id > 0) {
+            $warehouse_query->where('id', (int) $warehouse_id);
+        }
+
+        $row = $warehouse_query
             ->get()
             ->row();
-        $total_units = $this->db
+
+        $inventory_query = $this->db
             ->select('COALESCE(SUM(quantity), 0) AS total_units', FALSE)
-            ->from('warehouse_products')
+            ->from('warehouse_products');
+
+        if ((int) $warehouse_id > 0) {
+            $inventory_query->where('warehouse_id', (int) $warehouse_id);
+        }
+
+        $total_units = $inventory_query
             ->get()
             ->row();
 

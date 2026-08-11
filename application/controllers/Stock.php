@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Stock extends CI_Controller
+class Stock extends MY_Controller
 {
     public function __construct()
     {
@@ -16,10 +16,20 @@ class Stock extends CI_Controller
         $search_input = $this->input->get('q');
         $search = is_scalar($search_input) ? trim((string) $search_input) : '';
         $search = substr($search, 0, 200);
-        $warehouse_id = $this->positive_integer($this->input->get('warehouse_id'));
+        $requested_warehouse_id = $this->positive_integer($this->input->get('warehouse_id'));
 
-        if ($warehouse_id > 0 && !$this->warehouses->exists($warehouse_id)) {
-            $warehouse_id = 0;
+        if (!$this->is_admin()) {
+            if ($requested_warehouse_id > 0 && !$this->can_access_warehouse($requested_warehouse_id)) {
+                $this->deny_access('You do not have permission to view that warehouse inventory.');
+            }
+
+            $warehouse_id = (int) $this->current_user['warehouse_id'];
+        } else {
+            $warehouse_id = $requested_warehouse_id;
+
+            if ($warehouse_id > 0 && !$this->warehouses->exists($warehouse_id)) {
+                $warehouse_id = 0;
+            }
         }
 
         $per_page = 10;
@@ -34,7 +44,7 @@ class Stock extends CI_Controller
             'page_description' => 'Monitor and adjust product quantities across warehouses.',
             'active_nav' => 'stock',
             'inventory_rows' => $this->stock->get_filtered($search, $warehouse_id, $per_page, $offset),
-            'warehouses' => $this->warehouses->get_all(),
+            'warehouses' => $this->authorized_warehouses(),
             'summary' => $this->stock->get_summary($warehouse_id),
             'search' => $search,
             'warehouse_id' => $warehouse_id,
@@ -186,6 +196,8 @@ class Stock extends CI_Controller
         if (!$this->is_positive_integer($warehouse_id) || !$this->is_positive_integer($product_id)) {
             show_404();
         }
+
+        $this->require_warehouse_access((int) $warehouse_id);
 
         $inventory = $this->stock->find_inventory((int) $warehouse_id, (int) $product_id);
 

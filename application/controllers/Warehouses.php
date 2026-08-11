@@ -1,13 +1,15 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Warehouses extends CI_Controller
+class Warehouses extends MY_Controller
 {
     private $current_warehouse_id = NULL;
 
     public function __construct()
     {
         parent::__construct();
+
+        $this->require_admin();
 
         $this->load->model('Warehouse_model', 'warehouses');
     }

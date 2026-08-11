@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
+class Welcome extends MY_Controller {
 
 	public function index()
 	{
@@ -10,6 +10,7 @@ class Welcome extends CI_Controller {
 		$this->load->model('Stock_model', 'stock');
 		$this->load->model('Warehouse_model', 'warehouses');
 		$this->load->model('Customer_model', 'customers');
+		$warehouse_id = $this->is_admin() ? 0 : (int) $this->current_user['warehouse_id'];
 
 		$data = array(
 			'page_title' => 'Dashboard',
@@ -17,8 +18,8 @@ class Welcome extends CI_Controller {
 			'active_nav' => 'dashboard',
 			'product_summary' => $this->products->get_dashboard_summary(),
 			'category_count' => $this->categories->count_all(),
-			'inventory_summary' => $this->stock->get_summary(),
-			'warehouse_summary' => $this->warehouses->get_summary(),
+			'inventory_summary' => $this->stock->get_summary($warehouse_id),
+			'warehouse_summary' => $this->warehouses->get_summary($warehouse_id),
 			'customer_count' => $this->customers->count_all(),
 			'recent_products' => $this->products->get_recent(5),
 		);

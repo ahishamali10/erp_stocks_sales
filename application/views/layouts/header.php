@@ -4,6 +4,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $page_title = isset($page_title) ? $page_title : 'Dashboard';
 $page_description = isset($page_description) ? $page_description : '';
 $active_nav = isset($active_nav) ? $active_nav : '';
+$user_name = isset($this->current_user['name']) ? $this->current_user['name'] : 'ERP user';
+$name_parts = preg_split('/\s+/', trim($user_name));
+$initials = '';
+foreach (array_slice($name_parts, 0, 2) as $name_part) {
+    $initials .= strtoupper(substr($name_part, 0, 1));
+}
+$initials = $initials !== '' ? $initials : 'EU';
+$scope_label = isset($this->current_user['role']) && $this->current_user['role'] === 'admin'
+    ? 'All warehouses'
+    : (isset($this->current_user['warehouse_name']) ? $this->current_user['warehouse_name'] : 'Assigned warehouse');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,10 +48,16 @@ $active_nav = isset($active_nav) ? $active_nav : '';
 
                     <div class="flex items-center gap-3">
                         <div class="hidden text-right sm:block">
-                            <p class="text-sm font-semibold text-slate-800">Demo operator</p>
-                            <p class="text-xs text-slate-500">All warehouses</p>
+                            <p class="text-sm font-semibold text-slate-800"><?php echo html_escape($user_name); ?></p>
+                            <p class="text-xs text-slate-500"><?php echo html_escape($scope_label); ?></p>
                         </div>
-                        <div class="flex size-10 items-center justify-center rounded-full bg-brand-100 text-sm font-bold text-brand-700" aria-hidden="true">DO</div>
+                        <div class="flex size-10 items-center justify-center rounded-full bg-brand-100 text-sm font-bold text-brand-700" aria-hidden="true"><?php echo html_escape($initials); ?></div>
+                        <?php echo form_open('logout'); ?>
+                            <button type="submit" class="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" aria-label="Sign out">
+                                <svg aria-hidden="true" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 17l5-5-5-5m5 5H3m10-9h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" /></svg>
+                                <span class="hidden sm:inline">Sign out</span>
+                            </button>
+                        <?php echo form_close(); ?>
                     </div>
                 </div>
             </header>
