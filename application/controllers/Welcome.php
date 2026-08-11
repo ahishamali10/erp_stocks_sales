@@ -13,7 +13,7 @@ class Welcome extends CI_Controller {
 
 		$data = array(
 			'page_title' => 'Dashboard',
-			'page_description' => 'A concise operational view of the product catalog and upcoming ERP modules.',
+			'page_description' => 'A concise operational view of the catalog, inventory, customers, and sales workflow.',
 			'active_nav' => 'dashboard',
 			'product_summary' => $this->products->get_dashboard_summary(),
 			'category_count' => $this->categories->count_all(),

@@ -4,7 +4,7 @@ A compact Sales and Stock ERP assessment project built with CodeIgniter 3. The a
 
 ## Current Status
 
-Phases 1 through 4 are complete. The project includes the secure CodeIgniter foundation, database schema and seed data, a compiled Tailwind CSS ERP shell, catalog management, warehouse-specific inventory management, and customer management. Sales, authentication, and reporting are implemented in later phases.
+Phases 1 through 5 are complete. The project includes the secure CodeIgniter foundation, database schema and seed data, a compiled Tailwind CSS ERP shell, catalog management, warehouse-specific inventory management, customer management, and transactional sales invoicing. Authentication and reporting are implemented in later phases.
 
 ## Features
 
@@ -17,6 +17,8 @@ Phases 1 through 4 are complete. The project includes the secure CodeIgniter fou
 - Automatic zero-quantity inventory initialization for every warehouse when a product is created
 - Warehouse listing, create/edit forms, unique codes, transactional product initialization, and soft enable/disable controls
 - Searchable customer directory with pagination, create/edit forms, and invoice-safe deletion
+- Sales invoice builder with customer/warehouse selection, vanilla-JavaScript AJAX product search, dynamic lines, percentage discount, and immediate displayed totals
+- Trusted server-side prices and calculations, deterministic inventory row locking, insufficient-stock rejection, and atomic stock deduction
 - Output escaping for database and submitted values
 - Repeat-safe database schema and demonstration data
 
@@ -108,6 +110,8 @@ The repeat-safe seed includes:
 - `/customers` — customer directory and search
 - `/customers/create` — add a customer
 - `/customers/edit/{id}` — edit a customer
+- `/sales/create` — build and save a sales invoice
+- `/sales/search-products` — warehouse-scoped product search JSON endpoint
 
 Product, category, inventory, warehouse, and customer writes use explicit POST routes. Categories assigned to products and customers assigned to invoices cannot be deleted. Sales, authentication, and report routes will be added with their modules.
 
@@ -150,6 +154,10 @@ Tailwind is compiled locally into the checked-in application stylesheet. The run
 - Newly created warehouses receive a zero-quantity inventory row for every current product within the warehouse creation transaction.
 - Warehouses are soft-disabled rather than deleted; locations assigned to users cannot be disabled until those users are reassigned.
 - Customers can be deleted only while they have no invoice history; referenced customers are preserved.
+- Invoice lines are normalized by product ID, while prices, stock, discounts, and totals are recalculated from database values inside the save transaction.
+- Inventory rows are locked in ascending product ID order with `SELECT ... FOR UPDATE`; any unavailable line rolls back the complete invoice.
+- Invoice numbers are finalized from the inserted sale ID, backed by the database unique constraint.
+- Until authentication is added in Phase 6, invoices intentionally store `user_id = NULL`; warehouse authorization will then be derived from the signed-in user.
 - Successful inventory quantities cannot be negative; the database includes supporting check constraints, while invoice business rules will enforce this inside transactions.
 - The initial SQL uses `CREATE TABLE IF NOT EXISTS` and `INSERT IGNORE`, so re-importing does not delete existing data.
 - UI components should remain reusable CI3 view partials and use Tailwind utilities consistently instead of accumulating page-specific CSS.

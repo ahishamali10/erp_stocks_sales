@@ -82,6 +82,13 @@ class Customer_model extends CI_Model
         return (int) $this->db->count_all($this->table);
     }
 
+    public function exists($id)
+    {
+        return $this->db
+            ->where('id', (int) $id)
+            ->count_all_results($this->table) === 1;
+    }
+
     private function apply_search($search)
     {
         if ($search === '') {

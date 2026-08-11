@@ -3,13 +3,13 @@
     <div>
         <nav class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400" aria-label="Breadcrumb">Overview</nav>
         <h1 class="text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">Operations dashboard</h1>
-        <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Monitor the catalog foundation and move quickly into day-to-day ERP tasks.</p>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Monitor ERP master data and move quickly into inventory and sales tasks.</p>
     </div>
-    <a href="<?php echo site_url('products/create'); ?>" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">
+    <a href="<?php echo site_url('sales/create'); ?>" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">
         <svg aria-hidden="true" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" d="M12 5v14M5 12h14" />
         </svg>
-        Add product
+        New invoice
     </a>
 </div>
 
@@ -129,8 +129,8 @@
                 <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18m9-9H3" /></svg>
             </span>
             <div>
-                <h2 class="font-bold text-slate-900">Phase 4</h2>
-                <p class="text-xs text-slate-500">Customer foundation</p>
+                <h2 class="font-bold text-slate-900">Phase 5</h2>
+                <p class="text-xs text-slate-500">Sales invoicing</p>
             </div>
         </div>
         <div class="mt-5 space-y-3 text-sm">
@@ -139,7 +139,8 @@
             <div class="flex items-center gap-3 text-emerald-700"><span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span><span>Product catalog tools</span></div>
             <div class="flex items-center gap-3 text-emerald-700"><span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span><span>Warehouse inventory</span></div>
             <div class="flex items-center gap-3 text-emerald-700"><span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span><span>Customer management</span></div>
-            <div class="flex items-center gap-3 text-slate-400"><span class="flex size-5 items-center justify-center rounded-full bg-slate-100 text-xs">5</span><span>Sales invoices next</span></div>
+            <div class="flex items-center gap-3 text-emerald-700"><span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span><span>Transactional sales invoices</span></div>
+            <div class="flex items-center gap-3 text-slate-400"><span class="flex size-5 items-center justify-center rounded-full bg-slate-100 text-xs">6</span><span>Permissions and reports next</span></div>
         </div>
     </aside>
 </div>

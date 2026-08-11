@@ -93,6 +93,32 @@ class Stock_model extends CI_Model
         ));
     }
 
+    public function search_sale_products($warehouse_id, $search, $limit = 20)
+    {
+        $this->db
+            ->select('p.id, p.code, p.name, p.price, wp.quantity AS available_quantity')
+            ->from('warehouse_products wp')
+            ->join('products p', 'p.id = wp.product_id', 'inner')
+            ->join('warehouses w', 'w.id = wp.warehouse_id', 'inner')
+            ->where('wp.warehouse_id', (int) $warehouse_id)
+            ->where('p.is_active', 1)
+            ->where('w.is_active', 1);
+
+        if ($search !== '') {
+            $this->db
+                ->group_start()
+                ->like('p.name', $search)
+                ->or_like('p.code', $search)
+                ->group_end();
+        }
+
+        return $this->db
+            ->order_by('p.name', 'ASC')
+            ->limit((int) $limit)
+            ->get()
+            ->result();
+    }
+
     private function apply_filters($search, $warehouse_id)
     {
         if ($search !== '') {
