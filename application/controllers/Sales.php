@@ -15,7 +15,70 @@ class Sales extends MY_Controller
 
     public function index()
     {
-        redirect('sales/create');
+        $search_input = $this->input->get('q');
+        $search = is_scalar($search_input) ? substr(trim((string) $search_input), 0, 200) : '';
+        $requested_warehouse_id = $this->positive_integer($this->input->get('warehouse_id'));
+
+        if (!$this->is_admin()) {
+            if ($requested_warehouse_id > 0 && !$this->can_access_warehouse($requested_warehouse_id)) {
+                $this->deny_access('You do not have permission to view invoices from that warehouse.');
+            }
+
+            $warehouse_id = (int) $this->current_user['warehouse_id'];
+        } else {
+            $warehouse_id = $requested_warehouse_id;
+
+            if ($warehouse_id > 0 && !$this->warehouses->exists($warehouse_id)) {
+                $warehouse_id = 0;
+            }
+        }
+
+        $per_page = 15;
+        $total_rows = $this->sales->count_filtered($search, $warehouse_id);
+        $total_pages = max(1, (int) ceil($total_rows / $per_page));
+        $page = $this->positive_integer($this->input->get('page'));
+        $page = $page > 0 ? min($page, $total_pages) : 1;
+        $offset = ($page - 1) * $per_page;
+
+        $this->render('sales/index', array(
+            'page_title' => 'Sales invoices',
+            'page_description' => 'Review finalized invoices within your authorized warehouse scope.',
+            'active_nav' => 'sales',
+            'sales' => $this->sales->get_filtered($search, $warehouse_id, $per_page, $offset),
+            'summary' => $this->sales->get_history_summary($search, $warehouse_id),
+            'warehouses' => $this->authorized_warehouses(),
+            'search' => $search,
+            'warehouse_id' => $warehouse_id,
+            'is_admin' => $this->is_admin(),
+            'pagination' => $this->build_pagination($page, $total_pages, $search, $warehouse_id),
+            'total_rows' => $total_rows,
+            'result_from' => $total_rows > 0 ? $offset + 1 : 0,
+            'result_to' => min($offset + $per_page, $total_rows),
+        ));
+    }
+
+    public function view($id)
+    {
+        $sale_id = $this->positive_integer($id);
+
+        if ($sale_id < 1) {
+            show_404();
+        }
+
+        $warehouse_scope = $this->is_admin() ? 0 : (int) $this->current_user['warehouse_id'];
+        $sale = $this->sales->find_authorized($sale_id, $warehouse_scope);
+
+        if (!$sale) {
+            show_404();
+        }
+
+        $this->render('sales/view', array(
+            'page_title' => 'Invoice '.$sale->invoice_number,
+            'page_description' => 'Finalized invoice details and trusted saved line values.',
+            'active_nav' => 'sales',
+            'sale' => $sale,
+            'items' => $this->sales->get_items($sale_id),
+        ));
     }
 
     public function create()
@@ -103,11 +166,12 @@ class Sales extends MY_Controller
                 'discount_percentage' => $result['discount_percentage'],
                 'discount_amount' => $result['discount_amount'],
                 'total' => $result['total'],
+                'view_url' => site_url('sales/view/'.$result['sale_id']),
             )), 201);
         }
 
         $this->session->set_flashdata('success', $message);
-        redirect('sales/create');
+        redirect('sales/view/'.$result['sale_id']);
     }
 
     private function validate_invoice_request()
@@ -249,6 +313,69 @@ class Sales extends MY_Controller
     private function validation_failure($message, $status = 422)
     {
         return array('success' => FALSE, 'message' => $message, 'status' => (int) $status);
+    }
+
+    private function build_pagination($current_page, $total_pages, $search, $warehouse_id)
+    {
+        if ($total_pages <= 1) {
+            return array();
+        }
+
+        $items = array();
+
+        if ($current_page > 1) {
+            $items[] = $this->page_link('Previous', $current_page - 1, $search, $warehouse_id, FALSE);
+        }
+
+        $pages = array(1, $total_pages);
+        for ($page = max(1, $current_page - 2); $page <= min($total_pages, $current_page + 2); $page++) {
+            $pages[] = $page;
+        }
+
+        $pages = array_values(array_unique($pages));
+        sort($pages);
+        $previous_page = 0;
+
+        foreach ($pages as $page) {
+            if ($previous_page > 0 && $page > $previous_page + 1) {
+                $items[] = array('type' => 'ellipsis');
+            }
+
+            $items[] = $this->page_link((string) $page, $page, $search, $warehouse_id, $page === $current_page);
+            $previous_page = $page;
+        }
+
+        if ($current_page < $total_pages) {
+            $items[] = $this->page_link('Next', $current_page + 1, $search, $warehouse_id, FALSE);
+        }
+
+        return $items;
+    }
+
+    private function page_link($label, $page, $search, $warehouse_id, $current)
+    {
+        $query = array();
+
+        if ($search !== '') {
+            $query['q'] = $search;
+        }
+
+        if ($warehouse_id > 0) {
+            $query['warehouse_id'] = (int) $warehouse_id;
+        }
+
+        if ($page > 1) {
+            $query['page'] = (int) $page;
+        }
+
+        $url = site_url('sales');
+
+        return array(
+            'type' => 'link',
+            'label' => $label,
+            'url' => empty($query) ? $url : $url.'?'.http_build_query($query, '', '&', PHP_QUERY_RFC3986),
+            'current' => $current,
+        );
     }
 
     private function positive_integer($value)

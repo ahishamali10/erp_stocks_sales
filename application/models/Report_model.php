@@ -29,6 +29,24 @@ class Report_model extends CI_Model
             ->result();
     }
 
+    public function get_low_stock_export($search, $warehouse_id)
+    {
+        $this->db
+            ->select('p.code AS product_code, p.name AS product_name, p.alert_quantity')
+            ->select('w.name AS warehouse_name, w.code AS warehouse_code')
+            ->select('COALESCE(wp.quantity, 0) AS quantity', FALSE)
+            ->select('GREATEST(p.alert_quantity - COALESCE(wp.quantity, 0), 0) AS shortage', FALSE);
+
+        $this->base_low_stock_query($search, $warehouse_id);
+
+        return $this->db
+            ->order_by('shortage', 'DESC')
+            ->order_by('p.name', 'ASC')
+            ->order_by('w.name', 'ASC')
+            ->get()
+            ->result();
+    }
+
     public function get_low_stock_summary($search, $warehouse_id)
     {
         $this->db

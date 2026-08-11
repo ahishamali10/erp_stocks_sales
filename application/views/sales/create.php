@@ -10,10 +10,10 @@
             <h1 class="text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">New sales invoice</h1>
             <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Select a customer and warehouse, then add products from live stock.</p>
         </div>
-        <span class="inline-flex items-center gap-2 self-start rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
-            <span class="size-2 rounded-full bg-emerald-500"></span>
-            Server-validated totals
-        </span>
+        <div class="flex flex-wrap items-center gap-2">
+            <a href="<?php echo site_url('sales'); ?>" class="inline-flex min-h-10 items-center rounded-xl border border-slate-300 bg-white px-3 text-xs font-semibold text-slate-700 hover:border-brand-300 hover:text-brand-700">Invoice history</a>
+            <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700"><span class="size-2 rounded-full bg-emerald-500"></span>Server-validated totals</span>
+        </div>
     </div>
 
     <div data-invoice-feedback class="mb-6 hidden rounded-xl border px-4 py-3 text-sm" role="alert" aria-live="polite"></div>
@@ -25,7 +25,7 @@
                 <p data-success-number class="text-xl font-bold text-emerald-950"></p>
                 <p class="mt-1 text-sm text-emerald-700">Stock was deducted from the selected warehouse.</p>
             </div>
-            <p class="text-sm font-semibold text-emerald-900">Total <span data-success-total class="text-lg"></span></p>
+            <div class="flex items-center gap-3"><p class="text-sm font-semibold text-emerald-900">Total <span data-success-total class="text-lg"></span></p><a data-success-link href="<?php echo site_url('sales'); ?>" class="inline-flex min-h-9 items-center rounded-lg border border-emerald-300 bg-white px-3 text-xs font-semibold text-emerald-800 hover:bg-emerald-100">View invoice</a></div>
         </div>
     </section>
 

@@ -5,6 +5,90 @@ class Sale_model extends CI_Model
 {
     private $maximum_total_cents = 99999999999999;
 
+    public function count_filtered($search, $warehouse_id)
+    {
+        $this->base_history_query($search, $warehouse_id);
+
+        return (int) $this->db->count_all_results();
+    }
+
+    public function get_filtered($search, $warehouse_id, $limit, $offset)
+    {
+        $this->db
+            ->select('s.id, s.invoice_number, s.subtotal, s.discount_percentage, s.discount_amount, s.total, s.created_at')
+            ->select('c.name AS customer_name')
+            ->select('w.name AS warehouse_name, w.code AS warehouse_code')
+            ->select('u.name AS user_name')
+            ->select('(SELECT COUNT(*) FROM sale_items si WHERE si.sale_id = s.id) AS line_count', FALSE)
+            ->select('(SELECT COALESCE(SUM(si.quantity), 0) FROM sale_items si WHERE si.sale_id = s.id) AS total_quantity', FALSE);
+
+        $this->base_history_query($search, $warehouse_id);
+
+        return $this->db
+            ->order_by('s.created_at', 'DESC')
+            ->order_by('s.id', 'DESC')
+            ->limit((int) $limit, (int) $offset)
+            ->get()
+            ->result();
+    }
+
+    public function get_history_summary($search, $warehouse_id)
+    {
+        $this->db
+            ->select('COUNT(*) AS invoice_count', FALSE)
+            ->select('COALESCE(SUM(s.total), 0) AS sales_total', FALSE)
+            ->select('COALESCE(SUM(s.discount_amount), 0) AS discount_total', FALSE);
+        $this->base_history_query($search, $warehouse_id);
+        $summary = $this->db->get()->row();
+
+        $this->db->select('COALESCE(SUM(si.quantity), 0) AS unit_count', FALSE);
+        $this->base_history_query($search, $warehouse_id);
+        $units = $this->db
+            ->join('sale_items si', 'si.sale_id = s.id', 'inner')
+            ->get()
+            ->row();
+
+        return array(
+            'invoice_count' => (int) $summary->invoice_count,
+            'sales_total' => $summary->sales_total,
+            'discount_total' => $summary->discount_total,
+            'unit_count' => (int) $units->unit_count,
+        );
+    }
+
+    public function find_authorized($sale_id, $warehouse_id)
+    {
+        $this->db
+            ->select('s.id, s.invoice_number, s.subtotal, s.discount_percentage, s.discount_amount, s.total, s.created_at')
+            ->select('c.id AS customer_id, c.name AS customer_name, c.phone AS customer_phone, c.email AS customer_email')
+            ->select('w.id AS warehouse_id, w.name AS warehouse_name, w.code AS warehouse_code')
+            ->select('u.name AS user_name, u.email AS user_email')
+            ->from('sales s')
+            ->join('customers c', 'c.id = s.customer_id', 'inner')
+            ->join('warehouses w', 'w.id = s.warehouse_id', 'inner')
+            ->join('users u', 'u.id = s.user_id', 'left')
+            ->where('s.id', (int) $sale_id);
+
+        if ((int) $warehouse_id > 0) {
+            $this->db->where('s.warehouse_id', (int) $warehouse_id);
+        }
+
+        return $this->db->limit(1)->get()->row();
+    }
+
+    public function get_items($sale_id)
+    {
+        return $this->db
+            ->select('si.id, si.product_id, si.quantity, si.unit_price, si.subtotal')
+            ->select('p.code AS product_code, p.name AS product_name')
+            ->from('sale_items si')
+            ->join('products p', 'p.id = si.product_id', 'inner')
+            ->where('si.sale_id', (int) $sale_id)
+            ->order_by('si.id', 'ASC')
+            ->get()
+            ->result();
+    }
+
     public function create_invoice($customer_id, $warehouse_id, $user_id, $discount_percentage, $discount_basis, array $lines)
     {
         // A shared lock order keeps competing invoices from taking inventory locks in opposite sequences.
@@ -158,6 +242,27 @@ class Sale_model extends CI_Model
         return $this->db
             ->where('id', (int) $id)
             ->count_all_results($table) === 1;
+    }
+
+    private function base_history_query($search, $warehouse_id)
+    {
+        $this->db
+            ->from('sales s')
+            ->join('customers c', 'c.id = s.customer_id', 'inner')
+            ->join('warehouses w', 'w.id = s.warehouse_id', 'inner')
+            ->join('users u', 'u.id = s.user_id', 'left');
+
+        if ($search !== '') {
+            $this->db
+                ->group_start()
+                ->like('s.invoice_number', $search)
+                ->or_like('c.name', $search)
+                ->group_end();
+        }
+
+        if ((int) $warehouse_id > 0) {
+            $this->db->where('s.warehouse_id', (int) $warehouse_id);
+        }
     }
 
     private function money_to_cents($value)

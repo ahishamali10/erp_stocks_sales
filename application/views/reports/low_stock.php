@@ -1,4 +1,14 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+$export_parameters = array();
+if ($search !== '') {
+    $export_parameters['q'] = $search;
+}
+if ($warehouse_id > 0) {
+    $export_parameters['warehouse_id'] = (int) $warehouse_id;
+}
+$export_url = site_url('reports/low-stock/csv').(empty($export_parameters) ? '' : '?'.http_build_query($export_parameters, '', '&', PHP_QUERY_RFC3986));
+?>
 <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
     <div>
         <nav class="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400" aria-label="Breadcrumb">
@@ -9,7 +19,10 @@
         <h1 class="text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">Low-stock report</h1>
         <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Prioritize replenishment where on-hand quantity is at or below the product alert level.</p>
     </div>
-    <a href="<?php echo site_url('stock'); ?>" class="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-brand-300 hover:text-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">Open inventory</a>
+    <div class="flex flex-wrap gap-2">
+        <a href="<?php echo html_escape($export_url); ?>" class="inline-flex min-h-11 items-center justify-center rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">Export CSV</a>
+        <a href="<?php echo site_url('stock'); ?>" class="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-brand-300 hover:text-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">Open inventory</a>
+    </div>
 </div>
 
 <section class="mb-6 grid gap-4 sm:grid-cols-3" aria-label="Low-stock summary">

@@ -4,7 +4,7 @@ A compact Sales and Stock ERP assessment project built with CodeIgniter 3. The a
 
 ## Current Status
 
-Phases 1 through 6 and administrator user management are complete. The project includes the secure CodeIgniter foundation, database schema and seed data, a compiled Tailwind CSS ERP shell, catalog and warehouse inventory management, customer management, transactional sales invoicing, session authentication, warehouse authorization, user administration, and low-stock reporting.
+Phases 1 through 7 and administrator user management are complete. The project includes the secure CodeIgniter foundation, database schema and seed data, a compiled Tailwind CSS ERP shell, catalog and warehouse inventory management, customer management, transactional sales invoicing, invoice history, session authentication, warehouse authorization, user administration, and low-stock reporting with CSV export.
 
 ## Features
 
@@ -19,10 +19,12 @@ Phases 1 through 6 and administrator user management are complete. The project i
 - Searchable customer directory with pagination, create/edit forms, and invoice-safe deletion
 - Sales invoice builder with customer/warehouse selection, vanilla-JavaScript AJAX product search, dynamic lines, percentage discount, and immediate displayed totals
 - Trusted server-side prices and calculations, deterministic inventory row locking, insufficient-stock rejection, and atomic stock deduction
+- Filterable invoice history and read-only invoice detail pages with server-enforced warehouse scope
 - Session login/logout using bcrypt password verification and session-ID regeneration
 - `admin` organization-wide access and server-enforced `user_warehouse` access to the assigned warehouse only
 - Administrator-only user management with search, role filters, create/edit, secure password replacement, warehouse assignment, and protected deletion
 - Warehouse-scoped low-stock report with product search, warehouse filter, shortage calculation, summaries, and pagination
+- Filter-preserving low-stock CSV export limited to the signed-in user's authorized warehouse scope
 - Output escaping for database and submitted values
 - Repeat-safe database schema and demonstration data
 
@@ -119,9 +121,12 @@ The repeat-safe seed includes:
 - `/customers` — customer directory and search
 - `/customers/create` — add a customer
 - `/customers/edit/{id}` — edit a customer
+- `/sales` — authorized invoice history, search, warehouse filter, summaries, and pagination
 - `/sales/create` — build and save a sales invoice
+- `/sales/view/{id}` — read-only authorized invoice details
 - `/sales/search-products` — warehouse-scoped product search JSON endpoint
 - `/reports/low-stock` — authorized low-stock report, warehouse filter, product search, and shortage summary
+- `/reports/low-stock/csv` — CSV export of the currently filtered, authorized low-stock data
 
 Product, category, inventory, warehouse, customer, user, sales, and logout writes use explicit POST routes. Categories assigned to products, customers assigned to invoices, and users with attributed invoices cannot be deleted. Warehouse and user management are administrator-only; warehouse users are restricted server-side on inventory, sales, dashboard summaries, and reports.
 
@@ -168,8 +173,10 @@ Tailwind is compiled locally into the checked-in application stylesheet. The run
 - Inventory rows are locked in ascending product ID order with `SELECT ... FOR UPDATE`; any unavailable line rolls back the complete invoice.
 - Invoice numbers are finalized from the inserted sale ID, backed by the database unique constraint.
 - Saved invoices record the signed-in user ID. Warehouse users may search, adjust stock, report on, and sell only from their assigned warehouse; administrators may access all warehouses.
+- Invoice history and detail queries apply the same server-side warehouse scope; an out-of-scope invoice ID is returned as not found.
 - User passwords are accepted only when 8–72 characters and are stored with `password_hash()`. The final administrator cannot be demoted or deleted, and users cannot delete their own signed-in account.
 - A low-stock position is defined as `quantity <= alert_quantity`; shortage is `max(alert_quantity - quantity, 0)`.
+- Low-stock CSV exports preserve active product/warehouse filters, neutralize spreadsheet formula prefixes in text cells, and never export outside the current user's authorized scope.
 - Successful inventory quantities cannot be negative; the database includes supporting check constraints, while invoice business rules will enforce this inside transactions.
 - The initial SQL uses `CREATE TABLE IF NOT EXISTS` and `INSERT IGNORE`, so re-importing does not delete existing data.
 - UI components should remain reusable CI3 view partials and use Tailwind utilities consistently instead of accumulating page-specific CSS.

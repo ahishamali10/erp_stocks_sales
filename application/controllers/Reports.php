@@ -13,23 +13,9 @@ class Reports extends MY_Controller
 
     public function low_stock()
     {
-        $search_input = $this->input->get('q');
-        $search = is_scalar($search_input) ? substr(trim((string) $search_input), 0, 200) : '';
-        $requested_warehouse_id = $this->positive_integer($this->input->get('warehouse_id'));
-
-        if (!$this->is_admin()) {
-            if ($requested_warehouse_id > 0 && !$this->can_access_warehouse($requested_warehouse_id)) {
-                $this->deny_access('You do not have permission to report on that warehouse.');
-            }
-
-            $warehouse_id = (int) $this->current_user['warehouse_id'];
-        } else {
-            $warehouse_id = $requested_warehouse_id;
-
-            if ($warehouse_id > 0 && !$this->warehouses->exists($warehouse_id)) {
-                $warehouse_id = 0;
-            }
-        }
+        $filters = $this->resolve_filters();
+        $search = $filters['search'];
+        $warehouse_id = $filters['warehouse_id'];
 
         $per_page = 15;
         $total_rows = $this->reports->count_low_stock($search, $warehouse_id);
@@ -57,6 +43,75 @@ class Reports extends MY_Controller
         $this->load->view('layouts/header', $data);
         $this->load->view('reports/low_stock', $data);
         $this->load->view('layouts/footer', $data);
+    }
+
+    public function low_stock_csv()
+    {
+        if ($this->input->method(TRUE) !== 'GET') {
+            show_error('The requested method is not allowed.', 405, 'Method Not Allowed');
+        }
+
+        $filters = $this->resolve_filters();
+        $rows = $this->reports->get_low_stock_export($filters['search'], $filters['warehouse_id']);
+        $stream = fopen('php://temp', 'w+');
+
+        if ($stream === FALSE) {
+            log_message('error', 'Unable to open a temporary stream for the low-stock CSV export.');
+            show_error('The report could not be exported. Please try again.', 500, 'Export Error');
+        }
+
+        fputcsv($stream, array('Product Code', 'Product Name', 'Warehouse', 'Quantity', 'Alert Quantity', 'Shortage'));
+
+        foreach ($rows as $row) {
+            fputcsv($stream, array(
+                $this->safe_csv_text($row->product_code),
+                $this->safe_csv_text($row->product_name),
+                $this->safe_csv_text($row->warehouse_name.' ('.$row->warehouse_code.')'),
+                (int) $row->quantity,
+                (int) $row->alert_quantity,
+                (int) $row->shortage,
+            ));
+        }
+
+        rewind($stream);
+        $csv = stream_get_contents($stream);
+        fclose($stream);
+
+        return $this->output
+            ->set_content_type('text/csv', 'utf-8')
+            ->set_header('Content-Disposition: attachment; filename="low-stock-'.date('Ymd-His').'.csv"')
+            ->set_header('Cache-Control: no-store, no-cache, must-revalidate')
+            ->set_output($csv);
+    }
+
+    private function resolve_filters()
+    {
+        $search_input = $this->input->get('q');
+        $search = is_scalar($search_input) ? substr(trim((string) $search_input), 0, 200) : '';
+        $requested_warehouse_id = $this->positive_integer($this->input->get('warehouse_id'));
+
+        if (!$this->is_admin()) {
+            if ($requested_warehouse_id > 0 && !$this->can_access_warehouse($requested_warehouse_id)) {
+                $this->deny_access('You do not have permission to report on that warehouse.');
+            }
+
+            $warehouse_id = (int) $this->current_user['warehouse_id'];
+        } else {
+            $warehouse_id = $requested_warehouse_id;
+
+            if ($warehouse_id > 0 && !$this->warehouses->exists($warehouse_id)) {
+                $warehouse_id = 0;
+            }
+        }
+
+        return array('search' => $search, 'warehouse_id' => $warehouse_id);
+    }
+
+    private function safe_csv_text($value)
+    {
+        $value = (string) $value;
+
+        return preg_match('/^[=+\-@]/', $value) ? "'".$value : $value;
     }
 
     private function build_pagination($current_page, $total_pages, $search, $warehouse_id)

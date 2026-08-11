@@ -71,7 +71,7 @@ $is_admin = isset($this->current_user['role']) && $this->current_user['role'] ==
                 <svg aria-hidden="true" class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm13 10v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg>
                 Customers
             </a>
-            <a href="<?php echo site_url('sales/create'); ?>" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition <?php echo $active_nav === 'sales' ? $active_classes : $inactive_classes; ?>" <?php echo $active_nav === 'sales' ? 'aria-current="page"' : ''; ?>>
+            <a href="<?php echo site_url('sales'); ?>" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition <?php echo $active_nav === 'sales' ? $active_classes : $inactive_classes; ?>" <?php echo $active_nav === 'sales' ? 'aria-current="page"' : ''; ?>>
                 <svg aria-hidden="true" class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M7 3h10v4H7V3ZM5 7h14v14H5V7Zm4 4h6m-6 4h6" />
                 </svg>

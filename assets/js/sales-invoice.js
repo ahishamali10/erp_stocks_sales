@@ -27,6 +27,7 @@
     var successPanel = root.querySelector('[data-invoice-success]');
     var successNumber = root.querySelector('[data-success-number]');
     var successTotal = root.querySelector('[data-success-total]');
+    var successLink = root.querySelector('[data-success-link]');
     var lines = new Map();
     var searchTimer = null;
     var searchRequest = null;
@@ -389,6 +390,7 @@
             .then(function (payload) {
                 successNumber.textContent = payload.data.invoice_number;
                 successTotal.textContent = money(priceToCents(payload.data.total));
+                successLink.href = payload.data.view_url;
                 successPanel.classList.remove('hidden');
                 lines.clear();
                 discountInput.value = '0';
