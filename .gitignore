@@ -2,6 +2,9 @@
 
 application/cache/*
 !application/cache/index.html
+!application/cache/sessions/
+application/cache/sessions/*
+!application/cache/sessions/index.html
 
 application/logs/*
 !application/logs/index.html

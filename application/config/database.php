@@ -73,24 +73,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $active_group = 'default';
 $query_builder = TRUE;
 
+$database_hostname = getenv('ERP_DB_HOST');
+$database_username = getenv('ERP_DB_USERNAME');
+$database_password = getenv('ERP_DB_PASSWORD');
+$database_name = getenv('ERP_DB_DATABASE');
+
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'erp_stocks_Sales',
+	'hostname' => $database_hostname !== FALSE ? $database_hostname : 'localhost',
+	'username' => $database_username !== FALSE ? $database_username : 'root',
+	'password' => $database_password !== FALSE ? $database_password : '',
+	'database' => $database_name !== FALSE ? $database_name : 'erp_stocks_sales',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),
 	'cache_on' => FALSE,
 	'cachedir' => '',
-	'char_set' => 'utf8',
-	'dbcollat' => 'utf8_general_ci',
+	'char_set' => 'utf8mb4',
+	'dbcollat' => 'utf8mb4_unicode_ci',
 	'swap_pre' => '',
 	'encrypt' => FALSE,
 	'compress' => FALSE,
-	'stricton' => FALSE,
+	'stricton' => TRUE,
 	'failover' => array(),
 	'save_queries' => TRUE
 );
