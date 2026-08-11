@@ -50,7 +50,7 @@
                 <select id="warehouse-filter" name="warehouse_id" class="min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100">
                     <option value="">All warehouses</option>
                     <?php foreach ($warehouses as $warehouse): ?>
-                        <option value="<?php echo html_escape($warehouse->id); ?>" <?php echo (int) $warehouse_id === (int) $warehouse->id ? 'selected' : ''; ?>><?php echo html_escape($warehouse->name.' ('.$warehouse->code.')'); ?></option>
+                        <option value="<?php echo html_escape($warehouse->id); ?>" <?php echo (int) $warehouse_id === (int) $warehouse->id ? 'selected' : ''; ?>><?php echo html_escape($warehouse->name.' ('.$warehouse->code.')'.($warehouse->is_active ? '' : ' — Disabled')); ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -97,7 +97,7 @@
                             </td>
                             <td class="whitespace-nowrap px-5 py-4">
                                 <p class="font-medium text-slate-700"><?php echo html_escape($row->warehouse_name); ?></p>
-                                <p class="mt-1 font-mono text-xs text-slate-400"><?php echo html_escape($row->warehouse_code); ?></p>
+                                <div class="mt-1 flex items-center gap-2"><p class="font-mono text-xs text-slate-400"><?php echo html_escape($row->warehouse_code); ?></p><?php if (!$row->warehouse_is_active): ?><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-500">Disabled</span><?php endif; ?></div>
                             </td>
                             <td class="whitespace-nowrap px-5 py-4 text-right text-base font-bold tabular-nums text-slate-900"><?php echo html_escape(number_format($quantity)); ?></td>
                             <td class="whitespace-nowrap px-5 py-4 text-right tabular-nums text-slate-500"><?php echo html_escape(number_format($alert_quantity)); ?></td>

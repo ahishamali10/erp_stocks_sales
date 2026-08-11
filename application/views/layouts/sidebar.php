@@ -60,6 +60,10 @@ $inactive_classes = 'text-slate-300 hover:bg-white/10 hover:text-white';
                 </svg>
                 Inventory
             </a>
+            <a href="<?php echo site_url('warehouses'); ?>" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition <?php echo $active_nav === 'warehouses' ? $active_classes : $inactive_classes; ?>" <?php echo $active_nav === 'warehouses' ? 'aria-current="page"' : ''; ?>>
+                <svg aria-hidden="true" class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 20V9l8-5 8 5v11M8 20v-6h8v6" /></svg>
+                Warehouses
+            </a>
             <span class="flex cursor-not-allowed items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-500" aria-disabled="true">
                 <svg aria-hidden="true" class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M7 3h10v4H7V3ZM5 7h14v14H5V7Zm4 4h6m-6 4h6" />

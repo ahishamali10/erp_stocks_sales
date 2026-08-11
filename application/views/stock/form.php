@@ -34,6 +34,7 @@ $back_url = site_url('stock').'?warehouse_id='.rawurlencode($inventory->warehous
                     <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Warehouse</p>
                     <p class="mt-2 font-semibold text-slate-900"><?php echo html_escape($inventory->warehouse_name); ?></p>
                     <p class="mt-1 font-mono text-xs text-slate-500"><?php echo html_escape($inventory->warehouse_code); ?></p>
+                    <?php if (!$inventory->warehouse_is_active): ?><p class="mt-2 text-xs font-semibold text-amber-700">This warehouse is disabled.</p><?php endif; ?>
                 </div>
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Alert quantity</p>

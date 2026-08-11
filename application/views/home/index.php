@@ -57,13 +57,13 @@
         <div class="flex items-start justify-between gap-4">
             <div>
                 <p class="text-sm font-medium text-slate-500">Warehouses</p>
-                <p class="mt-2 text-3xl font-bold tracking-tight text-slate-950"><?php echo html_escape($inventory_summary['warehouse_count']); ?></p>
+                <p class="mt-2 text-3xl font-bold tracking-tight text-slate-950"><?php echo html_escape($warehouse_summary['total_count']); ?></p>
             </div>
             <span class="flex size-10 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
                 <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6" /></svg>
             </span>
         </div>
-        <a href="<?php echo site_url('stock'); ?>" class="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-brand-700 hover:text-brand-900"><?php echo html_escape(number_format($inventory_summary['total_units'])); ?> units on hand <span aria-hidden="true">→</span></a>
+        <a href="<?php echo site_url('warehouses'); ?>" class="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-brand-700 hover:text-brand-900"><?php echo html_escape($warehouse_summary['active_count']); ?> active · <?php echo html_escape(number_format($inventory_summary['total_units'])); ?> units <span aria-hidden="true">→</span></a>
     </article>
 </section>
 

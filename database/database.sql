@@ -17,10 +17,13 @@ CREATE TABLE IF NOT EXISTS warehouses (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     name VARCHAR(150) NOT NULL,
     code VARCHAR(50) NOT NULL,
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    UNIQUE KEY uq_warehouses_code (code)
+    UNIQUE KEY uq_warehouses_code (code),
+    KEY idx_warehouses_active (is_active),
+    CONSTRAINT chk_warehouses_is_active CHECK (is_active IN (0, 1))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS products (
@@ -154,10 +157,10 @@ INSERT IGNORE INTO categories (id, name) VALUES
     (2, 'Office Supplies'),
     (3, 'Accessories');
 
-INSERT IGNORE INTO warehouses (id, name, code) VALUES
-    (1, 'Main Warehouse', 'MAIN'),
-    (2, 'East Warehouse', 'EAST'),
-    (3, 'West Warehouse', 'WEST');
+INSERT IGNORE INTO warehouses (id, name, code, is_active) VALUES
+    (1, 'Main Warehouse', 'MAIN', 1),
+    (2, 'East Warehouse', 'EAST', 1),
+    (3, 'West Warehouse', 'WEST', 1);
 
 INSERT IGNORE INTO products (id, category_id, code, name, price, alert_quantity, is_active) VALUES
     (1, 1, 'P001', 'Business Laptop', 1500.00, 5, 1),

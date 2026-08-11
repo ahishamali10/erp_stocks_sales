@@ -19,7 +19,7 @@ class Stock_model extends CI_Model
         $this->db
             ->select('p.id AS product_id, p.code AS product_code, p.name AS product_name, p.alert_quantity, p.is_active')
             ->select('c.name AS category_name')
-            ->select('w.id AS warehouse_id, w.name AS warehouse_name, w.code AS warehouse_code')
+            ->select('w.id AS warehouse_id, w.name AS warehouse_name, w.code AS warehouse_code, w.is_active AS warehouse_is_active')
             ->select('COALESCE(wp.quantity, 0) AS quantity', FALSE)
             ->from('products p')
             ->join('categories c', 'c.id = p.category_id', 'inner')
@@ -66,7 +66,7 @@ class Stock_model extends CI_Model
         return $this->db
             ->select('p.id AS product_id, p.code AS product_code, p.name AS product_name, p.alert_quantity, p.is_active')
             ->select('c.name AS category_name')
-            ->select('w.id AS warehouse_id, w.name AS warehouse_name, w.code AS warehouse_code')
+            ->select('w.id AS warehouse_id, w.name AS warehouse_name, w.code AS warehouse_code, w.is_active AS warehouse_is_active')
             ->select('COALESCE(wp.quantity, 0) AS quantity', FALSE)
             ->from('products p')
             ->join('categories c', 'c.id = p.category_id', 'inner')

@@ -15,6 +15,7 @@ Phases 1 through 3 are complete. The project includes the secure CodeIgniter fou
 - Category listing, create/edit forms, unique-name validation, product counts, and protected deletion
 - Warehouse inventory listing with product search, warehouse filtering, pagination, health indicators, and quantity adjustment
 - Automatic zero-quantity inventory initialization for every warehouse when a product is created
+- Warehouse listing, create/edit forms, unique codes, transactional product initialization, and soft enable/disable controls
 - Output escaping for database and submitted values
 - Repeat-safe database schema and demonstration data
 
@@ -100,6 +101,9 @@ The repeat-safe seed includes:
 - `/categories/edit/{id}` — edit category
 - `/stock` — warehouse inventory, search, filter, and pagination
 - `/stock/edit/{warehouse_id}/{product_id}` — adjust one warehouse/product quantity
+- `/warehouses` — warehouse management and operational status
+- `/warehouses/create` — add a warehouse
+- `/warehouses/edit/{id}` — edit a warehouse
 
 Product, category, and inventory writes use explicit POST routes. Categories assigned to products cannot be deleted. Sales, authentication, and report routes will be added with their modules.
 
@@ -139,6 +143,8 @@ Tailwind is compiled locally into the checked-in application stylesheet. The run
 - Product disabling is soft through `products.is_active`.
 - Inventory is represented by one unique `warehouse_products` row per warehouse and product.
 - Newly created products receive a zero-quantity inventory row for every current warehouse within the product creation transaction.
+- Newly created warehouses receive a zero-quantity inventory row for every current product within the warehouse creation transaction.
+- Warehouses are soft-disabled rather than deleted; locations assigned to users cannot be disabled until those users are reassigned.
 - Successful inventory quantities cannot be negative; the database includes supporting check constraints, while invoice business rules will enforce this inside transactions.
 - The initial SQL uses `CREATE TABLE IF NOT EXISTS` and `INSERT IGNORE`, so re-importing does not delete existing data.
 - UI components should remain reusable CI3 view partials and use Tailwind utilities consistently instead of accumulating page-specific CSS.
