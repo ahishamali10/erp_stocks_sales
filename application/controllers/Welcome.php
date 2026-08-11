@@ -9,6 +9,7 @@ class Welcome extends CI_Controller {
 		$this->load->model('Category_model', 'categories');
 		$this->load->model('Stock_model', 'stock');
 		$this->load->model('Warehouse_model', 'warehouses');
+		$this->load->model('Customer_model', 'customers');
 
 		$data = array(
 			'page_title' => 'Dashboard',
@@ -18,6 +19,7 @@ class Welcome extends CI_Controller {
 			'category_count' => $this->categories->count_all(),
 			'inventory_summary' => $this->stock->get_summary(),
 			'warehouse_summary' => $this->warehouses->get_summary(),
+			'customer_count' => $this->customers->count_all(),
 			'recent_products' => $this->products->get_recent(5),
 		);
 

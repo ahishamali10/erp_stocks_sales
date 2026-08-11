@@ -13,7 +13,7 @@
     </a>
 </div>
 
-<section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Catalog summary">
+<section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5" aria-label="ERP summary">
     <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div class="flex items-start justify-between gap-4">
             <div>
@@ -64,6 +64,19 @@
             </span>
         </div>
         <a href="<?php echo site_url('warehouses'); ?>" class="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-brand-700 hover:text-brand-900"><?php echo html_escape($warehouse_summary['active_count']); ?> active · <?php echo html_escape(number_format($inventory_summary['total_units'])); ?> units <span aria-hidden="true">→</span></a>
+    </article>
+
+    <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="flex items-start justify-between gap-4">
+            <div>
+                <p class="text-sm font-medium text-slate-500">Customers</p>
+                <p class="mt-2 text-3xl font-bold tracking-tight text-slate-950"><?php echo html_escape($customer_count); ?></p>
+            </div>
+            <span class="flex size-10 items-center justify-center rounded-xl bg-violet-50 text-violet-700">
+                <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm13 10v-2a4 4 0 0 0-3-3.87" /></svg>
+            </span>
+        </div>
+        <a href="<?php echo site_url('customers'); ?>" class="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-brand-700 hover:text-brand-900">Manage customers <span aria-hidden="true">→</span></a>
     </article>
 </section>
 
@@ -116,8 +129,8 @@
                 <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18m9-9H3" /></svg>
             </span>
             <div>
-                <h2 class="font-bold text-slate-900">Phase 3</h2>
-                <p class="text-xs text-slate-500">Warehouse inventory</p>
+                <h2 class="font-bold text-slate-900">Phase 4</h2>
+                <p class="text-xs text-slate-500">Customer foundation</p>
             </div>
         </div>
         <div class="mt-5 space-y-3 text-sm">
@@ -125,7 +138,8 @@
             <div class="flex items-center gap-3 text-emerald-700"><span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span><span>Tailwind CSS pipeline</span></div>
             <div class="flex items-center gap-3 text-emerald-700"><span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span><span>Product catalog tools</span></div>
             <div class="flex items-center gap-3 text-emerald-700"><span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span><span>Warehouse inventory</span></div>
-            <div class="flex items-center gap-3 text-slate-400"><span class="flex size-5 items-center justify-center rounded-full bg-slate-100 text-xs">4</span><span>Customer foundation next</span></div>
+            <div class="flex items-center gap-3 text-emerald-700"><span class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs">✓</span><span>Customer management</span></div>
+            <div class="flex items-center gap-3 text-slate-400"><span class="flex size-5 items-center justify-center rounded-full bg-slate-100 text-xs">5</span><span>Sales invoices next</span></div>
         </div>
     </aside>
 </div>
